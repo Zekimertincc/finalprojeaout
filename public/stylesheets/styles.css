@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
+.overflow-y {
+    overflow-y: auto; /* Dikey taşmayı engelle ve bir kaydırma çubuğu ekler */
+}
+
+.overflow-x {
+    overflow-x: auto; /* Yatay taşmayı engelle ve bir kaydırma çubuğu ekler */
+}
+
+.overflow {
+    overflow: auto; /* Hem dikey hem yatay taşmayı engelle ve bir kaydırma çubuğu ekler */
+}
+
+body {
+    background-color: var(--background-color, #FFE0B1);
+}
+
+.navbar {
+    background-color: var(--nav-bar-color, #94674D);
+}
+
+
+
+.container2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 60px;
+    margin-left: 40px;
+    margin-right: 40px;
+    width: auto;
+    
+  }
+
+  .box {
+    width: calc(33.33% - 10px); /* Her satırda 3 kutu olacak şekilde hesaplama */
+    height: 80px;
+    background-color: #94674D;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+p,a{
+    font-family: "JetBrains Mono" !important;
+}
+
+.kutuyazı{
+
+    text-decoration: none;
+    text-align: center;
+    margin-top: -10px;
+    
+  
+}
+a.kutuyazı{
+    position: relative;
+    top:10px ;
+    color: white;
+    font-size: 12px;
+}
+
+.sahne{
+    width:900px;
+    height: 800px;
+    background-color: white;
+    margin:auto;
+    margin-top:90px ;
+}
+
+.oyunad{
+    margin-top: 20px;
+    text-align: center;
+}
+
+.sahne{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    flex-direction: column;
+}
+
+
+
+/*
+
+
+    BENZER KELİMELER OYUNU CSS BAŞLANGIÇ
+
+
+*/
+
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 60px;
+    margin-left: 40px;
+    margin-right: 40px;
+    
+  }
+
+.kelimekutu {
+    width: calc(33.33% - 10px); /* Her satırda 3 kutu olacak şekilde hesaplama */
+    height: 80px;
+    background-color: gray;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .dikey{
+    width: 350px;
+    height: 600px;
+    background-color: lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    display: flex;
+    flex-direction: column; 
+    margin-bottom: 90px;
+     }
+  .emoji{
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+
+  .board1{
+      
+      width: 70px;
+      height: 70px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+  }
+  .board2{
+      
+      width: 70px;
+      height: 70px;
+      margin-bottom: 20px;
+      }
+
+    .board3{
+        
+        width: 70px;
+        height: 70px;
+        margin-bottom: 20px;
+    }
+
+    .board4{
+        
+        width: 70px;
+        height: 70px;
+        margin-bottom: 20px;
+    }
+
+    .board5{
+        
+        width: 70px;
+        height: 70px;
+        margin-bottom: 20px;
+    }
+
+  .board6{
+      
+      width: 70px;
+      height: 70px;
+      margin-bottom: 20px;
+  }
+
+  .board7{
+      
+      width: 70px;
+      height: 70px;
+      margin-bottom: 20px;
+  }
+
+  
+
+  .blok{
+    width: 400px;
+    height: 100px;
+    background-color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ /* Blok yüksekliğini 100% olarak ayarla */
+  }
+
+    .blokkelime {
+     margin: 0; /* P öğesinin varsayılan margin'ini sıfırla */
+    }
+
+    .metin{
+        height: auto;
+
+    }
+
+
+
+
+@media screen and (max-width: 760px) {
+    .sahne{
+        width: 300px;
+
+    }
+    .dikey{
+        width: 200px;
+    }
+    .container2{
+        width: auto;
+    }
+  }
+  
+  
+  
+  

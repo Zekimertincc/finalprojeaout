@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Scores</title>
+    <script>
+        async function fetchUsersScores() {
+            try {
+                const response = await fetch('/users-scores');
+                const data = await response.json();
+
+                const listElement = document.getElementById('users-scores-list');
+                listElement.innerHTML = ''; // Clear the list before appending
+
+                data.forEach(user => {
+                    const listItem = document.createElement('li');
+                    const scoresText = user.scores.length > 0 ? user.scores.join(', ') : 'No scores';
+                    listItem.textContent = `${user.username}: ${scoresText}`;
+                    listElement.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('Error fetching users and scores:', error);
+            }
+        }
+
+        window.onload = fetchUsersScores;
+    </script>
+</head>
+<body>
+    <h1>Kullanıcı skorları</h1>
+    <ul id="users-scores-list"></ul>
+</body>
+</html>
