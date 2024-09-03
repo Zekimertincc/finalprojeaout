@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
+
+/* Genel stil */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    overflow-x:hidden    ;
+}
+
+
+/* Grid kutular */
+.oyunlarkutu {
+    margin-top: 60px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 20px;
+    justify-items: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.box {
+    width: 150px;
+    height: 60px;
+    background-color: #a78bfa;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box a {
+    text-decoration: none;
+    color: black;
+    font-size: 13px;
+    font-weight: normal;
+    font-family: "JetBrains Mono" !important;
+}
+
+.box:hover {
+    background-color: #7c3aed;
+}
+.başlık-yazı{
+    margin-top: 40px;
+    font-size: large;
+    text-align: center;
+}
+@media screen and (max-width: 760px) {
+    .oyunlarkutu {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 10px;
+        
+    }
+    .box {
+        width: 100px;
+        height: 60px;
+    }
+    .nav-brand  {
+        width: 100px !important;
+    }
+  }
+  

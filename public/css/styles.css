@@ -15,11 +15,14 @@
 
 
 .navbar{
-    background-color: #94674D !important;
+    background-color: #ffff !important;
 }
 
 body{
-    background-color:#FFE0B1 !important ;
+    background-color:#ffff !important ;
+}
+a{
+    color: black;
 }
 
 .container2 {

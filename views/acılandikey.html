@@ -8,10 +8,6 @@
     
     <title>Document</title>
     <style>
-        
-        .navbar{
-            background-color: #94674D !important;
-        }
         .navbar-nav {
             flex-direction: row; /* Elemanların yatay hizalanması */
         }
@@ -33,7 +29,6 @@
 
         .timer {
             font-size: 24px;
-            
         }
 
         .dikey {
@@ -48,8 +43,7 @@
             margin: 5px 0; /* Her bir board arasında boşluk */
             padding: 10px;
             font-size: 2em;
-            width: 900%; /* İsterseniz genişliği ayarlayabilirsiniz */
-            
+            width: 100%; /* Genişlik düzeltildi */
             text-align: center;
         }
 
@@ -60,7 +54,7 @@
 </head>
 <body>
     <!-- Navbar başlangıç -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="/">
                 <img src="/public/images/logo.png" alt="Logo">
@@ -71,19 +65,18 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Anasayfa</a>
+                        <a class="nav-link active text-dark" aria-current="page" href="#">Anasayfa</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="giriştuş" href="/authpage">Kullanıcı giriş</a>
+                        <a class="nav-link text-dark" id="giriştuş" href="/authpage">Kullanıcı giriş</a>
                     </li>
                     <li class="nav-item">
-                        <button class="nav-link btn btn-link" id="logout" onclick="logout()">Çıkış yap</button>
+                        <button class="nav-link btn btn-link text-dark" id="logout" onclick="logout()">Çıkış yap</button>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-    
     <!-- Navbar bitiş -->
 
     <h1 class="oyunad">Açılan Nesneler Dikey</h1>
@@ -97,8 +90,7 @@
             <option value="3">3</option>
         </select>
     </div>
-    <br>
-    <br>
+    <br><br>
     <div class="dikey">
         <div class="board1"></div>
         <div class="board2"></div>
@@ -112,8 +104,68 @@
         <button class="start btn btn-primary">Egzersizi başlat</button>
     </div>
 
-    <script src="/public/javascripts/index.js"></script>
+   
     <script src="/public/javascripts/authpage.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+        const emojis = ["☀","🎈","🌹","💄","🎀","⚽","🎾","🏁","😡","👿","🐻","🐶","🐬","🐟","🍀","👀","🚗","🍎","💝"];
+        const startButton = document.querySelector(".start");
+        const boards = document.querySelectorAll(".dikey > div");
+        const levelSet = document.querySelector("#level");
+        const timerElement = document.querySelector('.timer');
+        let gameOn = false;
+        let intervalId;
+
+        startButton.addEventListener("click", function() {
+            animateEmojis();
+        });
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function animateEmojis() {
+            if (intervalId) clearInterval(intervalId); // Önceki intervali temizle
+            clearBoard();
+            shuffleArray(emojis);
+            const duration = 60000; // Bir dakika (60 saniye) milisaniye cinsinden
+            const level = parseInt(levelSet.value);
+            const intervalTime = level === 1 ? 1000 : level === 2 ? 2000 : 3000;
+            
+            let index = 0;
+            intervalId = setInterval(() => {
+                if (index >= boards.length) {
+                    clearBoard();
+                    shuffleArray(emojis);
+                    index = 0;
+                }
+                boards[index].innerHTML = emojis[index];
+                index++;
+            }, intervalTime);
+            
+            const startTime = new Date();
+
+            const timerInterval = setInterval(() => {
+                const remainingTime = duration - (new Date() - startTime);
+                const seconds = Math.ceil(remainingTime / 1000);
+                timerElement.textContent = `Kalan Zaman: ${seconds} saniye`;
+
+                if (remainingTime <= 0) {
+                    clearInterval(intervalId);
+                    clearInterval(timerInterval);
+                    timerElement.textContent = "Süre Doldu!";
+                    clearBoard();
+                }
+            }, 1000);
+        }
+
+        function clearBoard() {
+            boards.forEach(board => board.innerHTML = '');
+        }
+    </script>
 </body>
 </html>
