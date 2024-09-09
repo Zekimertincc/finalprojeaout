@@ -45,6 +45,12 @@ app.use(session({
 
 // Route definitions
 app.get('/', (req, res) => {
+res.sendFile(path.join(__dirname, '/views/authpage.html'));
+
+});
+
+
+app.get('/index', (req, res) => {
     res.sendFile(path.join(__dirname, '/views/index.html'));
 });
 
@@ -85,7 +91,7 @@ app.get('/kolonlar', (req, res) => {
 });
 
 app.get('/authpage', (req, res) => {
-    res.sendFile(path.join(__dirname, '/views/authpage.html'));
+    res.sendFile(path.join(__dirname, '/views/kayıtsayfası.html'));
 });
 
 app.get('/profil', (req, res) => {
@@ -119,6 +125,14 @@ app.get('/cms2', (req,res) => {
     res.sendFile(path.join(__dirname, '/views/cms2.html'));
 });
 
+app.get('/kayit', (req, res) => {
+    res.sendFile(path.join(__dirname, '/views/kayıtsayfası.html'));
+});
+
+app.get('/ogrislem', (req,res) => {
+    res.sendFile(path.join(__dirname, 'views/adminuserpanel.html'))
+}  );
+
 
 
 // Register route
@@ -131,16 +145,16 @@ app.post('/signup', async (req, res) => {
             return res.status(400).send('This username is already taken.');
         }
 
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
+       // const saltRounds = 10;
+      //  const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        const newUser = { username, password: hashedPassword };
+        const newUser = { username, password};
         await collection.create(newUser);
 
-        res.status(201).send('User registered successfully.');
+        res.status(201).send('Başarıyla kayıt olundu.');
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error during user registration.');
+        res.status(500).send('Kayıt sırasında bir problem yaşandı.');
     }
 });
 
@@ -158,14 +172,14 @@ app.post('/login', async (req, res) => {
             return res.status(401).send('Invalid username or password.');
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await (password);
         if (!isMatch) {
             return res.status(401).send('Invalid username or password.');
         }
 
         // Create session
         req.session.user = { id: user._id, username: user.username };
-        res.redirect('/');
+        res.redirect('/index');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error during login.');
@@ -301,6 +315,32 @@ app.delete('/delete-text', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+app.get('/fetch-usernameandpassword', async (req, res) => {
+    try {
+        // Fetch only the username and password fields from the collection
+        const users = await collection.find({}, { username: 1, password: 1 }).exec(); 
+        res.json(users); // Send the fetched data as a JSON response
+    } catch (err) {
+        console.error("Error fetching usernames and passwords:", err);
+        res.status(500).send('Server error: ' + err.message);
+    }
+});
+// Delete user route
+app.delete('/delete-user', async (req, res) => {
+    const { username } = req.body;
+    try {
+        const result = await collection.deleteOne({ username });
+        if (result.deletedCount > 0) {
+            res.status(200).send('User deleted successfully');
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).send('Server error');
+    }
+});
+
 
   
 app.listen(PORT, () => {
