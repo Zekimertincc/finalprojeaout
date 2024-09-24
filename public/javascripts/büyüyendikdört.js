@@ -5,7 +5,7 @@ const centerY = canvas.height / 2;
 const timerElement = document.querySelector(".timer");
 const levelSet = document.querySelector("#level");
 let timerInterval;
-
+let index;
 function drawRectangle(x, y) {
     ctx.beginPath();
     ctx.rect(centerX - x / 2, centerY - y / 2, x, y);
@@ -69,5 +69,30 @@ function GameLoop() {
         clearInterval(timerInterval);
         timerElement.textContent = "Süre Doldu!";
         clearCanvas();
+        saveExerciseCount();
     }, duration);
+}
+async function saveExerciseCount() {
+    const exerciseData = {
+        egzersiz: "Büyüyen dikdört  ", // Or any identifier for your game/exercise
+        count: index // The count of words displayed
+    };
+
+    try {
+        const response = await fetch('/saveegcount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(exerciseData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save exercise count');
+        }
+
+        console.log('Exercise count saved successfully');
+    } catch (error) {
+        console.error('Error saving exercise count:', error);
+    }
 }

@@ -1,11 +1,9 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const path = require('path');
-const fs = require('fs');
-const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const { connectDb, collection, collection2 , collection3} = require('./config/database');
+const { connectDb, collection, collection2 , collection3, collection4} = require('./config/database');
 
 dotenv.config();
 
@@ -265,6 +263,43 @@ app.get('/users-scores', async (req, res) => {
     }
 });
 
+// Kullanıcıların egzersiz sayılarını fetch eden route
+app.get('/users-egzersiz-count', async (req, res) => {
+    try {
+        // Tüm kullanıcıları çekiyoruz
+        const users = await collection.find({}, 'username').exec(); 
+        // Egzersiz sayılarını çekiyoruz
+        const egzersizCounts = await collection4.find({}).exec();
+
+        // Kullanıcıların egzersiz bilgilerini bir arada tutacağımız map
+        const userEgzersizMap = {};
+
+        // Her bir egzersiz verisini userId'ye göre organize ediyoruz
+        egzersizCounts.forEach(egz => {
+            const userIdStr = egz.userId.toString();
+            if (!userEgzersizMap[userIdStr]) {
+                userEgzersizMap[userIdStr] = [];
+            }
+            userEgzersizMap[userIdStr].push({ egzersiz: egz.egzersiz, count: egz.count });
+        });
+
+        // Her kullanıcı için ilgili egzersiz bilgilerini ekliyoruz
+        const usersEgzersizCounts = users.map(user => {
+            const userIdStr = user._id.toString();
+            return {
+                username: user.username,
+                egzersizler: userEgzersizMap[userIdStr] || [] // Eğer egzersiz bilgisi yoksa boş array döndür
+            };
+        });
+
+        res.json(usersEgzersizCounts);
+    } catch (error) {
+        console.error('Error fetching users and egzersiz counts:', error);
+        res.status(500).send('Server error');
+    }
+});
+
+
 
 // text kaydetme 
 app.post('/saveText', async (req, res) => {
@@ -340,6 +375,86 @@ app.delete('/delete-user', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
+//egzersizSchema için route
+app.post('/saveegcount', async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).send('Unauthorized: No session available');
+    }
+
+    const { id: userId } = req.session.user;
+    const { egzersiz } = req.body;
+
+    try {
+        // Egzersiz var mı diye kontrol et
+        let existingCounter = await collection4.findOne({ userId, egzersiz });
+
+        if (existingCounter) {
+            // Eğer varsa, count değerini 1 artır
+            existingCounter.count += 1;
+            await existingCounter.save();
+        } else {
+            // Eğer yoksa, yeni kayıt oluştur ve count'u 1 yap
+            existingCounter = new collection4({
+                userId,
+                egzersiz,
+                count: 1
+            });
+            await existingCounter.save();
+        }
+
+        res.status(200).send('Egzersiz sayısı kaydedildi');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+});
+app.get('/fetchegcount', async (req, res) => {
+    let userId;
+
+    try {
+        const egCount = await collection4.find({ userId }).exec();
+        res.json(egCount);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+});
+
+
+/*
+app.get('/fetchegcount', async (req, res) => {
+    const users = await collection.find({}, 'username').exec(); 
+    const egCount = await collection4.find({}).exec();
+
+    const userEgCountMap = {};
+    egCount.forEach(egCount => {
+        const userIdStr =egCount.userId.toString();
+        ıf (!userEgCountMap[userIdStr]) {
+            userEgCountMap[userIdStr] = [];
+        }
+        userEgCountMap[userIdStr].push(egCount.egCount);
+    });
+
+    const
+
+            const usersScores = users.map(user => {
+                const userIdStr = user._id.toString();
+                return {
+                    username: user.username,
+                    scores: userScoresMap[userIdStr] || []
+                };
+            });
+
+            res.json(usersScores);
+        } catch (error) {
+            console.error('Error fetching users and scores:', error);
+            res.status(500).send('Server error');
+        }
+    });
+  
+*/
+
 
 
   

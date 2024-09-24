@@ -68,6 +68,7 @@ function startTimer() {
     timerInterval = setInterval(() => {
         seconds++;
         timerElement.textContent = seconds + " saniye";
+        saveExerciseCount();
     }, 1000);
 }
 
@@ -80,6 +81,7 @@ function endTimer() {
         highScore = süre;
         saveScore(highScore);
     }
+    
 }
 
 function kelimeSay() {
@@ -94,6 +96,7 @@ function sonYazılar() {
 startButton.addEventListener("click", function() {
     fetchTexts().then(() => {
         metinGöster();
+        
     });
 });
 
@@ -124,6 +127,8 @@ async function fetchTexts() {
 
 egzersizBitir.addEventListener("click", function () {
     endTimer();
+    saveExerciseCount();
+    
 });
 
 async function checkLoginStatus() {
@@ -165,4 +170,31 @@ async function logout() {
     } catch (error) {
         console.error('Logout sırasında hata:', error);
     }
+}
+
+
+async function saveExerciseCount() {
+    const exerciseData = {
+        egzersiz: "Hızlı okuma ", // Or any identifier for your game/exercise
+        count: index // The count of words displayed
+    };
+
+    try {
+        const response = await fetch('/saveegcount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(exerciseData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save exercise count');
+        }
+
+        console.log('Exercise count saved successfully');
+    } catch (error) {
+        console.error('Error saving exercise count:', error);
+    }
+
 }

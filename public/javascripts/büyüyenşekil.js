@@ -7,6 +7,8 @@ const timerElement = document.querySelector('.timer');
 const levelSet = document.querySelector("#level")
 let intervalId;
 let timerInterval;
+let index; 
+
 
 startButton.addEventListener("click", function() {
     GameLoop();
@@ -60,6 +62,7 @@ function GameLoop(){
         clearInterval(intervalId);
         clearInterval(timerInterval);
         timerElement.textContent = "Süre Doldu!";
+        saveExerciseCount();
     }, duration);
 
     // Timer'ı her 100ms'de bir güncelle
@@ -68,4 +71,28 @@ function GameLoop(){
         const seconds = Math.ceil(remainingTime / 1000);
         timerElement.textContent = `Kalan Zaman: ${seconds} saniye`;
     }, 100);
+}
+async function saveExerciseCount() {
+    const exerciseData = {
+        egzersiz: "Büyüyen daire  ", // Or any identifier for your game/exercise
+        count: index // The count of words displayed
+    };
+
+    try {
+        const response = await fetch('/saveegcount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(exerciseData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save exercise count');
+        }
+
+        console.log('Exercise count saved successfully');
+    } catch (error) {
+        console.error('Error saving exercise count:', error);
+    }
 }

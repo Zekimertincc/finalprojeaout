@@ -21,7 +21,7 @@ const kutu9 = document.querySelector(".kutuyazı9");
 const kutu10 = document.querySelector(".kutuyazı10");
 const kutu11 = document.querySelector(".kutuyazı11");
 const kutu12 = document.querySelector(".kutuyazı12");
-
+let index = 0;
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -99,11 +99,13 @@ function kelimeleriGöster() {
             if (remainingTime < 0) {
                 clearInterval(intervalId);
                 timerElement.textContent = "Süre Doldu!";
+
             }
         };
     
         updateTimer();
         const intervalId = setInterval(updateTimer, 1000);
+        
     }
     
 
@@ -112,6 +114,7 @@ function kelimeleriGöster() {
     startButton.addEventListener("click", function() {
         kelimeleriGöster();
         timer(); 
+        saveExerciseCount();
 });
 
 
@@ -147,5 +150,30 @@ function tümKelimelerTıklandı() {
         
         // Yeni kelimeleri göster
         kelimeleriGöster();
+    }
+}
+
+async function saveExerciseCount() {
+    const exerciseData = {
+        egzersiz: "Benzer Kelimeler", // Or any identifier for your game/exercise
+        count: index // The count of words displayed
+    };
+
+    try {
+        const response = await fetch('/saveegcount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(exerciseData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save exercise count');
+        }
+
+        console.log('Exercise count saved successfully');
+    } catch (error) {
+        console.error('Error saving exercise count:', error);
     }
 }

@@ -32,6 +32,13 @@ const textSchema = new Schema({
   }]
 })
 
+//hangi egzersiz kaç kere yapıldı bilgisi
+const egzersizSchema = new Schema({ 
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  egzersiz: { type: String, required: true },
+  count: { type: Number, required: true }
+});
+
 
 
 exports.collection2 = mongoose.model('Score', ScoreSchema);
@@ -41,3 +48,4 @@ exports.collection3 = mongoose.model('texts',textSchema);
 
 exports.collection = mongoose.model('users', loginSchema);
 
+exports.collection4 = mongoose.model('egzersiz', egzersizSchema); 

@@ -4,7 +4,7 @@ let gameTime = 30; // game time in seconds
 let timer;
 let correctSelections = 0;
 let gameInProgress = true;
-
+let index;
 function startGame() {
     round = 1;
     score = 0;
@@ -20,6 +20,7 @@ function endGame() {
     document.getElementById('instruction').innerText = `Oyun bitti! Skor: ${score}`;
     document.getElementById('gameArea').innerHTML = '';
     gameInProgress = false;
+    saveExerciseCount();
 }
 
 function nextRound() {
@@ -91,4 +92,28 @@ function startTimer() {
             endGame();
         }
     }, 1000);
+}
+async function saveExerciseCount() {
+    const exerciseData = {
+        egzersiz: "tek çift ", // Or any identifier for your game/exercise
+        count: index // The count of words displayed
+    };
+
+    try {
+        const response = await fetch('/saveegcount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(exerciseData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save exercise count');
+        }
+
+        console.log('Exercise count saved successfully');
+    } catch (error) {
+        console.error('Error saving exercise count:', error);
+    }
 }

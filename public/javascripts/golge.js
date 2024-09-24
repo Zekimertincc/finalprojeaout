@@ -71,6 +71,7 @@ function oyunLoop() {
             timerElement.textContent = "00:00";
             // Egzersiz bittiğinde tüm kelimeleri görünür yap
             document.querySelectorAll('.kelime').forEach(kelime => kelime.classList.add('visible'));
+            saveExerciseCount();
         }
     }, 1000);
 }
@@ -101,3 +102,29 @@ function kelimeGoster() {
         clearInterval(intervalId);
     }
 }
+
+    // Oyun bittiğinde egzersiz sayısını kaydet
+    async function saveExerciseCount() {
+        const exerciseData = {
+            egzersiz: "Gölgeleme çalışması", // Or any identifier for your game/exercise
+            count: index // The count of words displayed
+        };
+
+        try {
+            const response = await fetch('/saveegcount', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(exerciseData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save exercise count');
+            }
+
+            console.log('Exercise count saved successfully');
+        } catch (error) {
+            console.error('Error saving exercise count:', error);
+        }
+    }

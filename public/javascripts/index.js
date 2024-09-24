@@ -13,6 +13,8 @@ const board7 = document.querySelector(".board7");
 const board8 = document.querySelector(".board8");
 const levelSet = document.querySelector("#level")
 let gameOn = false;
+let index;
+
 
 startButton.addEventListener("click", function() {
 
@@ -83,6 +85,7 @@ function animateEmojis() {
         setTimeout(() => {
             clearInterval(timerInterval);
             timerElement.textContent = "Süre Doldu!";
+            saveExerciseCount();
         }, duration);
     }
 
@@ -129,6 +132,33 @@ function clearBoard() {
 
 
 // dikey ve yatay bitiş
+
+
+ // Oyun bittiğinde egzersiz sayısını kaydet
+ async function saveExerciseCount() {
+    const exerciseData = {
+        egzersiz: "Açılan nesneler yatay", // Or any identifier for your game/exercise
+        count: index // kaç kere yapıldığı
+    };
+
+    try {
+        const response = await fetch('/saveegcount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(exerciseData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save exercise count');
+        }
+
+        console.log('Exercise count saved successfully');
+    } catch (error) {
+        console.error('Error saving exercise count:', error);
+    }
+}
 
 
 

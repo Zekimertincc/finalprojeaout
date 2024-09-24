@@ -116,6 +116,7 @@
         const timerElement = document.querySelector('.timer');
         let gameOn = false;
         let intervalId;
+        let index;
 
         startButton.addEventListener("click", function() {
             animateEmojis();
@@ -158,6 +159,7 @@
                     clearInterval(intervalId);
                     clearInterval(timerInterval);
                     timerElement.textContent = "Süre Doldu!";
+                    saveExerciseCount();
                     clearBoard();
                 }
             }, 1000);
@@ -166,6 +168,30 @@
         function clearBoard() {
             boards.forEach(board => board.innerHTML = '');
         }
+        async function saveExerciseCount() {
+            const exerciseData = {
+                egzersiz: "Açılan nesneler yatay  ", // Or any identifier for your game/exercise
+                count: index // The count of words displayed
+            };
+
+            try {
+                const response = await fetch('/saveegcount', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(exerciseData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save exercise count');
+                }
+
+                console.log('Exercise count saved successfully');
+            } catch (error) {
+                console.error('Error saving exercise count:', error);
+            }
+}
     </script>
 </body>
 </html>
